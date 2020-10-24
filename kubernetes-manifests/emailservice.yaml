@@ -28,7 +28,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: emailservice
+        image: iamusama/emailservice
         ports:
         - containerPort: 8080
         env:

@@ -28,7 +28,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: paymentservice
+        image: iamusama/paymentservice
         ports:
         - containerPort: 50051
         env:

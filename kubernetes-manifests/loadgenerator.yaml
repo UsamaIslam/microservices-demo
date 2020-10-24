@@ -31,7 +31,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: main
-        image: loadgenerator
+        image: iamusama/loadgenerator
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"

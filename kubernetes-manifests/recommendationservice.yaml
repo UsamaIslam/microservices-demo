@@ -28,7 +28,7 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
       - name: server
-        image: recommendationservice
+        image: iamusama/recommendationservice
         ports:
         - containerPort: 8080
         readinessProbe:
