@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,19 +25,25 @@ spec:
     metadata:
       labels:
         app: loadgenerator
-      annotations:
-        sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
       terminationGracePeriodSeconds: 5
       restartPolicy: Always
       containers:
       - name: main
         image: iamusama/loadgenerator
+        ports:
+        - containerPort: 8089
+        readinessProbe:
+          periodSeconds: 5
+          tcpSocket:
+            port: 8089
+        livenessProbe:
+          periodSeconds: 5
+          tcpSocket:
+            port: 8089
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"
-        - name: USERS
-          value: "10"
         resources:
           requests:
             cpu: 300m
@@ -44,3 +51,29 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgenerator
+spec:
+  type: ClusterIP
+  selector:
+    app: loadgenerator
+  ports:
+  - name: loadgenerator
+    port: 8089
+    targetPort: 8089
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgenerator-external
+spec:
+  type: LoadBalancer
+  selector:
+    app: loadgenerator
+  ports:
+  - name: http
+    port: 8089
+    targetPort: 8089
